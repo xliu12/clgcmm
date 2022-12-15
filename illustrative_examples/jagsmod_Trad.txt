@@ -1,0 +1,51 @@
+model
+{
+    for (i in 1:N) {
+        for (j in 1:TT) {
+            M[i, j] ~ dnorm(mM[i, j], prec_eM)
+            mM[i, j] <- ISM[i, 1] + ISM[i, 2] * TimeM[j]
+            Y[i, j] ~ dnorm(mY[i, j], prec_eY)
+            mY[i, j] <- ISY[i, 1] + ISY[i, 2] * TimeY[j]
+        }
+        ISM[i, 1:2] ~ dmnorm(mISM[i, 1:2], prec_vM[1:2, 1:2])
+        mISM[i, 1] <- a0[1] + aX[1] * X[i] + aZ[1:numZ, 1] * 
+            Z[i, 1:numZ]
+        mISM[i, 2] <- a0[2] + aX[2] * X[i] + aZ[1:numZ, 1] * 
+            Z[i, 1:numZ]
+        ISY[i, 1:2] ~ dmnorm(mISY[i, 1:2], prec_vY[1:2, 1:2])
+        mISY[i, 1] <- b0[1] + bZ[1:numZ, 1] * Z[i, 1:numZ] + 
+            bX[1] * X[i] + bIM[1] * ISM[i, 1] + bSM[1] * ISM[i, 
+            2]
+        mISY[i, 2] <- b0[2] + bZ[1:numZ, 2] * Z[i, 1:numZ] + 
+            bX[2] * X[i] + bIM[2] * ISM[i, 1] + bSM[2] * ISM[i, 
+            2]
+    }
+    prec_eM ~ dgamma(0.001, 0.001)
+    var_eM <- 1/prec_eM
+    prec_vM[1:2, 1:2] ~ dwish(R, 3)
+    prec_eY ~ dgamma(0.001, 0.001)
+    prec_vY[1:2, 1:2] ~ dwish(R, 3)
+    Psi_vM <- inverse(prec_vM)
+    var_eY <- 1/prec_eY
+    Psi_vY <- inverse(prec_vY)
+    for (k in 1:2) {
+        aX[k] ~ dnorm(0.00000E+00, 1.00000E-06)
+        a0[k] ~ dnorm(0.00000E+00, 1.00000E-06)
+        for (z in 1:numZ) {
+            aZ[z, k] ~ dnorm(0.00000E+00, 1.00000E-06)
+        }
+    }
+    for (k in 1:2) {
+        b0[k] ~ dnorm(0.00000E+00, 1.00000E-06)
+    }
+    for (z in 1:numZ) {
+        bZ[z, 1:2] ~ dmnorm(zero, prec_vY[1:2, 1:2])
+    }
+    bX[1:2] ~ dmnorm(zero, prec_vY[1:2, 1:2])
+    bIM[1:2] ~ dmnorm(zero, prec_vY[1:2, 1:2])
+    bSM[1:2] ~ dmnorm(zero, prec_vY[1:2, 1:2])
+    X_IM[1:2] <- aX[1] * (bIM[1:2])
+    X_SM[1:2] <- aX[2] * (bSM[1:2])
+    X_jo[1:2] <- 0.00000E+00 + X_IM[1:2] + X_SM[1:2]
+    Xde[1:2] <- bX[1:2]
+}
