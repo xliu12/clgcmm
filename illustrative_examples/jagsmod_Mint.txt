@@ -63,8 +63,8 @@ model
     X_IM[1:2] <- aX[1] * (bIM[1:2] + (bIMSM[1:2]) * a0[2])
     X_SM[1:2] <- aX[2] * (bSM[1:2] + (bIMSM[1:2]) * (a0[1] + 
         aX[1]))
-    X_jo[1:2] = X_mu[1:2] + X_IM[1:2] + X_SM[1:2]
-    Xde[1:2] = bX[1:2]
+    X_jo[1:2] <- X_mu[1:2] + X_IM[1:2] + X_SM[1:2]
+    Xde[1:2] <- bX[1:2]
     altX_IM[1:2] <- aX[1] * (bIM[1:2] + (bIMSM[1:2]) * (a0[2] + 
         aX[2]))
     altX_SM[1:2] <- aX[2] * (bSM[1:2] + (bIMSM[1:2]) * (a0[1]))
