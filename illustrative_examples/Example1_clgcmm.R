@@ -73,8 +73,8 @@ jagsdat <- list(
   M=M, Y=Y, X=X, Z=as.matrix(Z), numZ=1,
   R=diag(1,nrow = 2),
   zero=c(0,0),
-  whichX0=which(X==0), # row numbers of treatment group
-  whichX1=which(X==1) # row numbers of control group
+  whichX0=which(X==0), # row numbers of control group
+  whichX1=which(X==1) # row numbers of treatment group
 )
 
 ex1_jagsout_Mint <- jags(data = jagsdat, jags.seed = 123,
@@ -88,7 +88,7 @@ ex1_jagsout_Mint <- jags(data = jagsdat, jags.seed = 123,
 )
 ex1_jagsout_Mint
 # save posterior means and 0.95 percential intervals
-ex1_jagsres_Mint=data.frame(ex1_jagsout_Mint$BUGSoutput$summary[ , c(1,3,7)])
+ex1_jagsres_Mint<-data.frame(ex1_jagsout_Mint$BUGSoutput$summary[ , c(1,3,7)])
 round(ex1_jagsres_Mint, 3)
 # Note that with Mint, 
 # the original and alternative versions of the IIEs via IM (or via SM) alone are allowed to be different; 
