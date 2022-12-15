@@ -90,8 +90,8 @@ jagsm <- function(){
   
   X_IM[1:2] <- aX[1] * (bIM[1:2] +bXIM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mSMc[1] )
   X_SM[1:2] <- aX[2] * (bSM[1:2] +bXSM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mIMt[1] )    
-  X_jo[1:2] = X_mu[1:2] + X_IM[1:2] + X_SM[1:2]
-  Xde[1:2] = bX[1:2] +bXIM[1:2]*mIMc + bXSM[1:2]*mSMc + bXIMSM[1:2]*( mIMc[1]*mSMc[1] + t(aZ[ ,1])%*%varZ%*%aZ[ ,2] + Psi_vMctrl[1,2] )     
+  X_jo[1:2] <- X_mu[1:2] + X_IM[1:2] + X_SM[1:2]
+  Xde[1:2] <- bX[1:2] +bXIM[1:2]*mIMc + bXSM[1:2]*mSMc + bXIMSM[1:2]*( mIMc[1]*mSMc[1] + t(aZ[ ,1])%*%varZ%*%aZ[ ,2] + Psi_vMctrl[1,2] )     
   altX_IM[1:2] <- aX[1] * (bIM[1:2] +bXIM[1:2] + (bIMSM[1:2]+bXIMSM[1:2])  * mSMt[1] )
   altX_SM[1:2] <- aX[2] * (bSM[1:2] +bXSM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mIMc[1] )
   
