@@ -126,8 +126,8 @@ jagsdata <- list(
   Z=as.matrix(Z), numZ=1, 
   mZ=rep(0, 1), # column vector containing the mean of Z
   varZ=diag(1, nrow = 1), # matrix containing the variance-covariance matrix of Z
-  whichX0=which(X==0), # row numbers of treatment group
-  whichX1=which(X==1) # row numbers of control group
+  whichX0=which(X==0), # row numbers of control group
+  whichX1=which(X==1) # row numbers of treatment group
 )
 
 jagsout <- jags(data = jagsdata, jags.seed = 123,
