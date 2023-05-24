@@ -86,15 +86,38 @@ jagsm <- function(){
   mSMc <- a0[2] +t(aZ[ ,2])%*%mZ
   
   # the estimators of the interventional indirect and direct effects
+  
+  # IIE due to the mutual dependence on IY and on SY
   X_mu[1:2] <- (bIMSM[1:2]+bXIMSM[1:2]) * (Psi_vMtrt[1, 2] - Psi_vMctrl[1, 2])
-  
+  # pure IIE due to the mutual dependence on IY and on SY
+  pX_mu[1:2] <- (bIMSM[1:2]) * (Psi_vMtrt[1, 2] - Psi_vMctrl[1, 2])
+  # IIE via IM on IY and on SY
   X_IM[1:2] <- aX[1] * (bIM[1:2] +bXIM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mSMc[1] )
-  X_SM[1:2] <- aX[2] * (bSM[1:2] +bXSM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mIMt[1] )    
+  # pure IIE via IM on IY and on SY
+  pX_IM[1:2] <- aX[1] * (bIM[1:2] + (bIMSM[1:2]) * mSMc[1] )
+  # IIE via SM on IY and on SY
+  X_SM[1:2] <- aX[2] * (bSM[1:2] +bXSM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mIMt[1] )   # pure IIE via SM on IY and on SY
+  pX_SM[1:2] <- aX[2] * (bSM[1:2] + (bIMSM[1:2]) * mIMt[1] )  
+  # IIE joint on IY and on SY
   X_jo[1:2] <- X_mu[1:2] + X_IM[1:2] + X_SM[1:2]
-  Xde[1:2] <- bX[1:2] +bXIM[1:2]*mIMc + bXSM[1:2]*mSMc + bXIMSM[1:2]*( mIMc[1]*mSMc[1] + t(aZ[ ,1])%*%varZ%*%aZ[ ,2] + Psi_vMctrl[1,2] )     
-  altX_IM[1:2] <- aX[1] * (bIM[1:2] +bXIM[1:2] + (bIMSM[1:2]+bXIMSM[1:2])  * mSMt[1] )
-  altX_SM[1:2] <- aX[2] * (bSM[1:2] +bXSM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mIMc[1] )
+  # pure IIE joint on IY and on SY
+  pX_jo[1:2] <- pX_mu[1:2] + pX_IM[1:2] + pX_SM[1:2]
   
+  # IDE on IY and on SY
+  Xde[1:2] <- bX[1:2] +bXIM[1:2]*mIMc + bXSM[1:2]*mSMc + bXIMSM[1:2]*( mIMc[1]*mSMc[1] + t(aZ[ ,1])%*%varZ%*%aZ[ ,2] + Psi_vMctrl[1,2] )     
+  # total IDE on IY and on SY
+  tXde[1:2] <- bX[1:2] +bXIM[1:2]*mIMt + bXSM[1:2]*mSMt + bXIMSM[1:2]*( mIMt[1]*mSMt[1] + t(aZ[ ,1])%*%varZ%*%aZ[ ,2] + Psi_vMtrt[1,2] ) 
+  
+  # alternative IIE via IM on IY and on SY
+  altX_IM[1:2] <- aX[1] * (bIM[1:2] +bXIM[1:2] + (bIMSM[1:2]+bXIMSM[1:2])  * mSMt[1] )
+  # pure alternative IIE via IM on IY and on SY
+  paltX_IM[1:2] <- aX[1] * (bIM[1:2] + (bIMSM[1:2])  * mSMt[1] )
+  # alternative IIE via SM on IY and on SY
+  altX_SM[1:2] <- aX[2] * (bSM[1:2] +bXSM[1:2] + (bIMSM[1:2]+bXIMSM[1:2]) * mIMc[1] )
+  # pure alternative IIE via SM on IY and on SY
+  paltX_SM[1:2] <- aX[2] * (bSM[1:2] + (bIMSM[1:2]) * mIMc[1] )
+  
+  # difference between two IIE versions 
   diffX_IM[1:2] <- altX_IM[1:2] - X_IM[1:2]
   diffX_SM[1:2] <- altX_SM[1:2] - X_SM[1:2]
   
@@ -134,7 +157,8 @@ jagsout <- jags(data = jagsdata, jags.seed = 123,
       model.file = "jagsmod_interaction_XIMSM.txt", # the JAGS model script for fitting the interaction model (the default diffuse priors described in subsection "Bayesian estimation" are used)
       parameters.to.save = c("aX", "a0","aZ", "Psi_vMctrl","Psi_vMtrt","var_eM", # mediator model parameters 
       "bX","bIM","bSM","bIMSM","bXIM","bXSM","bXIMSM","b0","bZ", "Psi_vY", "var_eY", # outcome model parameters 
-      "X_IM","altX_IM","X_SM", "altX_SM","X_mu", "Xde", # the estimators of the interventional (in)direct effects  
+      "X_IM","altX_IM","X_SM", "altX_SM","X_mu", "Xde", 
+      "pX_IM","paltX_IM","pX_SM", "paltX_SM","pX_mu", "tXde", # the estimators of the interventional (in)direct effects  
       "diffX_IM", "diffX_SM" # differences between the alternative and orignal versions of the interventional indirect effects via IM alone and those via SM alone  
       ), n.chains = 2,n.iter = 1e5, n.thin = 2
 )
