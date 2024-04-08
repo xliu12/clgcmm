@@ -29,20 +29,20 @@ jagsm <- function(){
     ISM[i, 1:2] ~ dmnorm(mISM[i, 1:2], prec_vMtrt[1:2, 1:2])
   }
   for (i in 1:N) {
-    mISM[i, 1] <- a0[1] + aZ[1:numZ, 1] * Z[i, 1:numZ] + 
+    mISM[i, 1] <- a0[1] + aZ[1:numZ, 1] %*% Z[i, 1:numZ] + 
       aX[1] * X[i]
-    mISM[i, 2] <- a0[2] + aZ[1:numZ, 2] * Z[i, 1:numZ] + 
+    mISM[i, 2] <- a0[2] + aZ[1:numZ, 2] %*% Z[i, 1:numZ] + 
       aX[2] * X[i]
   }
   for(i in 1:N){
     
     ISY[i,1:2] ~ dmnorm( mISY[i,1:2], prec_vY[1:2,1:2])
-    mISY[i,1]<-b0[1]+bZ[1:numZ, 1]*Z[i,1:numZ]+ bX[1]*X[i] +
+    mISY[i,1]<-b0[1]+bZ[1:numZ, 1] %*% Z[i,1:numZ]+ bX[1]*X[i] +
       bIM[1]*ISM[i,1] + bSM[1]*ISM[i,2] +
       bIMSM[1]*ISM[i,1]*ISM[i,2] + 
       bXIM[1]*X[i]*ISM[i,1] + bXSM[1]*X[i]*ISM[i,2] + bXIMSM[1]*X[i]*ISM[i,1]*ISM[i,2] 
     
-    mISY[i,2]<-b0[2]+bZ[1:numZ, 2]*Z[i,1:numZ]+ bX[2]*X[i] +
+    mISY[i,2]<-b0[2]+bZ[1:numZ, 2] %*% Z[i,1:numZ]+ bX[2]*X[i] +
       bIM[2]*ISM[i,1] + bSM[2]*ISM[i,2] +
       bIMSM[2]*ISM[i,1]*ISM[i,2] + 
       bXIM[2]*X[i]*ISM[i,1] + bXSM[2]*X[i]*ISM[i,2] + bXIMSM[2]*X[i]*ISM[i,1]*ISM[i,2]
